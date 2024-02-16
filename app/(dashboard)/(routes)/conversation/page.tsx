@@ -1,20 +1,26 @@
 "use client";
 
+import OpenAI from "openai";
+import axios from "axios";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MessageSquare } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 import Heading from "@/components/Heading";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 
 const formSchema = z.object({
   prompt: z.string().min(1, { message: "prompt is required" }),
 });
 
 const ConversationPage = () => {
+  const [messages, setMessages] = useState<ChatCompletionMessageParam[]>([]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -25,9 +31,26 @@ const ConversationPage = () => {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    try {
+      const useMessage: OpenAI.Chat.ChatCompletionMessageParam = {
+        role: "user",
+        content: values.prompt,
+      };
+      const newMessages = [...messages, useMessage];
+
+      const response = await axios.post("/api/conversation", {
+        messages: newMessages,
+      });
+
+      setMessages((current) => [...current, useMessage, response.data]);
+
+      form.reset();
+    } catch (error) {
+      // TODO open pro modal
+      console.log("error", error);
+    } finally {
+      // TODO refresh
+    }
   };
 
   return (
@@ -72,6 +95,7 @@ const ConversationPage = () => {
             </form>
           </Form>
         </div>
+        <div className="space-y-4 mt-4">Messages Content</div>
       </div>
     </div>
   );

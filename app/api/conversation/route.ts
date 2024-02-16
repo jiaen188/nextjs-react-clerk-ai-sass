@@ -27,8 +27,9 @@ export async function POST(req: Request) {
     //   messages,
     //   model: "gpt-3.5-turbo",
     // });
+    // return NextResponse.json(response.choices[0].message);
 
-    // TODO 需要翻墙或者梯子，用第三方服务
+    // TODO 需要梯子，用第三方服务替代
     const response = await axios.post(process.env.BASE_URL + '/v1' + '/chat/completions', {
       messages,
       model: "gpt-3.5-turbo",

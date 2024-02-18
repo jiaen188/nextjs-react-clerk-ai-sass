@@ -28,6 +28,10 @@ export async function POST(req: Request) {
       return new NextResponse("OpenAI API key not set", { status: 500 });
     }
 
+    if (!messages) {
+      return new NextResponse("Messages are required", { status: 400 });
+    }
+
     // const response = await openai.chat.completions.create({
     //   messages,
     //   model: "gpt-3.5-turbo",

@@ -47,6 +47,7 @@ export async function POST(req: Request) {
       model: "dall-e-3",
       // amount: parseInt(amount, 10),
       size: resolution,
+      // style: 'natural'
     }, {
       headers: {
         'Authorization': `Bearer ${process.env.OPEN_AI_API_KEY}`

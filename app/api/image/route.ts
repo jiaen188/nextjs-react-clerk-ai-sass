@@ -35,11 +35,12 @@ export async function POST(req: Request) {
       return new NextResponse("Resolution are required", { status: 400 });
     }
 
-    // const response = await openai.chat.completions.create({
-    //   messages,
-    //   model: "gpt-3.5-turbo",
+    // const response = await openai.images.generate({
+    //   prompt,
+    //   amount: parseInt(amount, 10),
+    //   size: resolution,
     // });
-    // return NextResponse.json(response.choices[0].message);
+    // return NextResponse.json(response.data.data);
 
     // TODO 需要梯子，用第三方服务替代
     const response = await axios.post(process.env.BASE_URL + '/v1' + '/images/generations', {

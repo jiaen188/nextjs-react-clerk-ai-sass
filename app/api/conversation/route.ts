@@ -1,9 +1,10 @@
 
-import { checkApiLimit, incrementApiLimit } from "@/lib/api-limit";
 import { auth } from "@clerk/nextjs";
 import axios from "axios";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
+
+import { checkApiLimit, increaseApiLimit } from "@/lib/api-limit";
 
 const openai = new OpenAI({
   apiKey: process.env.OPEN_AI_API_KEY,
@@ -50,7 +51,7 @@ export async function POST(req: Request) {
       }
     })
 
-    await incrementApiLimit()
+    await increaseApiLimit()
   
     return NextResponse.json(response.data.choices[0].message);
   } catch (error) {

@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { MessageSquare } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import Heading from "@/components/Heading";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
@@ -23,6 +24,8 @@ const formSchema = z.object({
 });
 
 const ConversationPage = () => {
+  const router = useRouter();
+
   const [messages, setMessages] = useState<
     OpenAI.Chat.ChatCompletionMessageParam[]
   >([]);
@@ -55,7 +58,8 @@ const ConversationPage = () => {
       // TODO open pro modal
       console.log("error", error);
     } finally {
-      // TODO refresh
+      // 刷新 dashboard layout ，触发getApiLimitCount 更新
+      router.refresh();
     }
   };
 

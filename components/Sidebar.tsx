@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Montserrat } from "next/font/google";
-import { cn } from "@/lib/utils";
 import {
   Code,
   ImageIcon,
@@ -15,7 +14,10 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
-const montserrat = Montserrat({ subsets: ["latin"], weight: "600" });
+import { cn } from "@/lib/utils";
+import FreeCounter from "@/components/FreeCounter";
+
+const poppins = Montserrat({ weight: "600", subsets: ["latin"] });
 
 const routes = [
   {
@@ -61,7 +63,11 @@ const routes = [
   },
 ];
 
-const Sidebar = () => {
+interface SidebarProps {
+  apiLimitCount: number;
+}
+
+const Sidebar = ({ apiLimitCount = 0 }: SidebarProps) => {
   const pathname = usePathname();
 
   return (
@@ -71,9 +77,7 @@ const Sidebar = () => {
           <div className="relative w-8 h-8 mr-4">
             <Image fill alt="Logo" src="/logo.png"></Image>
           </div>
-          <h1 className={cn("text-2xl font-bold", montserrat.className)}>
-            Genius
-          </h1>
+          <h1 className={cn("text-2xl font-bold")}>Genius</h1>
         </Link>
         <div className="space-y-1">
           {routes.map((route) => (
@@ -97,6 +101,7 @@ const Sidebar = () => {
           ))}
         </div>
       </div>
+      <FreeCounter apiLimitCount={apiLimitCount}></FreeCounter>
     </div>
   );
 };

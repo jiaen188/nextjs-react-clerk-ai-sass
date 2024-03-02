@@ -1,6 +1,5 @@
 "use client";
 
-import OpenAI from "openai";
 import axios from "axios";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,6 +7,7 @@ import { Download, ImageIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,6 @@ import {
 import Heading from "@/components/Heading";
 import Empty from "@/components/Empty";
 import Loader from "@/components/Loader";
-import { cn } from "@/lib/utils";
 import { Card, CardFooter } from "@/components/ui/card";
 
 const formSchema = z.object({
@@ -78,6 +77,8 @@ const resolutionOptions = [
 ];
 
 const ImagePage = () => {
+  const router = useRouter();
+
   const [images, setImages] = useState<string[]>([
     // "https://filesystem.site/cdn/20240218/cnxRUKiX4DNtliQx91JQm7R7dDPfxb.webp",
     // "https://oaidalleapiprodscus.blob.core.windows.net/private/org-7BN3tEdx2d8HyU8DmazQLzHT/user-cPqwklWaPmbpe9IvaeQByj1m/img-O5DcCSBtWy0qYg7Wn4ChQCo6.png?st=2024-02-18T12%3A25%3A40Z&se=2024-02-18T14%3A25%3A40Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2024-02-18T08%3A16%3A47Z&ske=2024-02-19T08%3A16%3A47Z&sks=b&skv=2021-08-06&sig=egi/AER0LLBF8KM8h7VsFvG0pJmxEmdvnUAfI69aHDY%3D",
@@ -111,7 +112,8 @@ const ImagePage = () => {
       // TODO open pro modal
       console.log("error", error);
     } finally {
-      // TODO refresh
+      // 刷新 dashboard layout ，触发getApiLimitCount 更新
+      router.refresh();
     }
   };
 

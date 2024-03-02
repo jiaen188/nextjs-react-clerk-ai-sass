@@ -23,6 +23,7 @@ const formSchema = z.object({
 
 const VideoPage = () => {
   const router = useRouter();
+
   const [video, setVideo] = useState<string>();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -46,7 +47,8 @@ const VideoPage = () => {
       // TODO open pro modal
       console.log("error", error);
     } finally {
-      // TODO refresh
+      // 刷新 dashboard layout ，触发getApiLimitCount 更新
+      router.refresh();
     }
   };
 

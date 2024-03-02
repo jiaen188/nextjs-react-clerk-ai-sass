@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Music } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import Heading from "@/components/Heading";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
@@ -19,6 +20,8 @@ const formSchema = z.object({
 });
 
 const MusicPage = () => {
+  const router = useRouter();
+
   const [music, setMusic] = useState<string>("");
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -42,7 +45,8 @@ const MusicPage = () => {
       // TODO open pro modal
       console.log("error", error);
     } finally {
-      // TODO refresh
+      // 刷新 dashboard layout ，触发getApiLimitCount 更新
+      router.refresh();
     }
   };
 

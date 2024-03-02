@@ -3,7 +3,13 @@ import Sidebar from "@/components/Sidebar";
 import { getApiLimitCount } from "@/lib/api-limit";
 
 const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
-  const apiLimitCount = await getApiLimitCount();
+  // neon 链接不能开代理，所以用trycatch ，不然本地开发报错，页面一片空白
+  let apiLimitCount = 0;
+  try {
+    apiLimitCount = await getApiLimitCount();
+  } catch (error) {
+    console.log("error", error);
+  }
 
   return (
     <div className="h-full relative">

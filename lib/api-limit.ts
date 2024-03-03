@@ -48,7 +48,7 @@ export const checkApiLimit = async () => {
     }
   })
 
-  if (!useApiLimit || useApiLimit.count <= MAX_FREE_COUNTS) {
+  if (!useApiLimit || useApiLimit.count < MAX_FREE_COUNTS) {
     return true
   } else {
     return false

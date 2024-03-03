@@ -23,6 +23,7 @@ import Heading from "@/components/Heading";
 import Empty from "@/components/Empty";
 import Loader from "@/components/Loader";
 import { Card, CardFooter } from "@/components/ui/card";
+import { useProModal } from "@/hooks/use-pro-modal";
 
 const formSchema = z.object({
   prompt: z.string().min(1, { message: "Image prompt is required" }),
@@ -77,6 +78,8 @@ const resolutionOptions = [
 ];
 
 const ImagePage = () => {
+  const proModal = useProModal();
+
   const router = useRouter();
 
   const [images, setImages] = useState<string[]>([
@@ -108,9 +111,10 @@ const ImagePage = () => {
       setImages(urls);
 
       form.reset();
-    } catch (error) {
-      // TODO open pro modal
-      console.log("error", error);
+    } catch (error: any) {
+      if (error?.response?.status === 403) {
+        proModal.onOpen();
+      }
     } finally {
       // 刷新 dashboard layout ，触发getApiLimitCount 更新
       router.refresh();

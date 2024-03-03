@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import Loader from "@/components/Loader";
 import Empty from "@/components/Empty";
+import { useProModal } from "@/hooks/use-pro-modal";
 
 const formSchema = z.object({
   prompt: z.string().min(1, {
@@ -22,6 +23,8 @@ const formSchema = z.object({
 });
 
 const VideoPage = () => {
+  const proModal = useProModal();
+
   const router = useRouter();
 
   const [video, setVideo] = useState<string>();
@@ -43,9 +46,10 @@ const VideoPage = () => {
 
       setVideo(response.data[0]);
       form.reset();
-    } catch (error) {
-      // TODO open pro modal
-      console.log("error", error);
+    } catch (error: any) {
+      if (error?.response?.status === 403) {
+        proModal.onOpen();
+      }
     } finally {
       // 刷新 dashboard layout ，触发getApiLimitCount 更新
       router.refresh();

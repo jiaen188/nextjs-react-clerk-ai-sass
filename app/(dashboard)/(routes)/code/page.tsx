@@ -18,12 +18,18 @@ import Loader from "@/components/Loader";
 import UserAvatar from "@/components/UserAvatar";
 import BotAvatar from "@/components/BotAvatar";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import { useProModal } from "@/hooks/use-pro-modal";
 
 const formSchema = z.object({
   prompt: z.string().min(1, { message: "prompt is required" }),
 });
 
 const CodePage = () => {
+  const proModal = useProModal();
+
+  const router = useRouter();
+
   const [messages, setMessages] = useState<
     OpenAI.Chat.ChatCompletionMessageParam[]
   >([]);
@@ -52,11 +58,14 @@ const CodePage = () => {
       setMessages((current) => [...current, useMessage, response.data]);
 
       form.reset();
-    } catch (error) {
-      // TODO open pro modal
+    } catch (error: any) {
       console.log("error", error);
+      if (error?.response?.status === 403) {
+        proModal.onOpen();
+      }
     } finally {
-      // TODO refresh
+      // 刷新 dashboard layout ，触发getApiLimitCount 更新
+      router.refresh();
     }
   };
 
